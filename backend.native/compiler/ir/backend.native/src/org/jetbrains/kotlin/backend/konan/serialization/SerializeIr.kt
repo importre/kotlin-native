@@ -916,7 +916,7 @@ internal class IrDeserializer(val context: Context,
         return IrInstanceInitializerCallImpl(start, end, IrClassSymbolImpl(descriptor), context.irBuiltIns.unitType)
     }
 
-    private fun deserializeReturn(proto: KonanIr.IrReturn, start: Int, end: Int, type: KotlinType): IrReturn {
+    private fun deserializeReturn(proto: KonanIr.IrReturn, start: Int, end: Int): IrReturn {
         val descriptor = 
             deserializeDescriptor(proto.returnTarget) as FunctionDescriptor
         val value = deserializeExpression(proto.value)
@@ -958,7 +958,7 @@ internal class IrDeserializer(val context: Context,
         return IrStringConcatenationImpl(start, end, type.ir, arguments)
     }
 
-    private fun deserializeThrow(proto: KonanIr.IrThrow, start: Int, end: Int, type: KotlinType): IrThrowImpl {
+    private fun deserializeThrow(proto: KonanIr.IrThrow, start: Int, end: Int): IrThrowImpl {
         return IrThrowImpl(start, end, context.irBuiltIns.nothingType, deserializeExpression(proto.value))
     }
 
@@ -1148,7 +1148,7 @@ internal class IrDeserializer(val context: Context,
             INSTANCE_INITIALIZER_CALL
                 -> deserializeInstanceInitializerCall(proto.instanceInitializerCall, start, end)
             RETURN
-                -> deserializeReturn(proto.`return`, start, end, type)
+                -> deserializeReturn(proto.`return`, start, end)
             SET_FIELD
                 -> deserializeSetField(proto.setField, start, end)
             SET_VARIABLE
@@ -1156,7 +1156,7 @@ internal class IrDeserializer(val context: Context,
             STRING_CONCAT
                 -> deserializeStringConcat(proto.stringConcat, start, end, type)
             THROW
-                -> deserializeThrow(proto.`throw`, start, end, type)
+                -> deserializeThrow(proto.`throw`, start, end)
             TRY
                 -> deserializeTry(proto.`try`, start, end, type)
             TYPE_OP
